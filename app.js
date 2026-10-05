@@ -25,6 +25,10 @@ function googleSearchHref(product, language = 'en') {
   return localizedGoogleHref(product.googleSearchUrl, product, language);
 }
 
+function displayProduct(product, language) {
+  return language === 'ml' && product.ml ? { ...product, ...product.ml } : product;
+}
+
 function showProductFromHash() {
   const sectionId = decodeURIComponent(location.hash.slice(1));
   if (!sectionId || !products.some(product => product.sectionId === sectionId)) {
@@ -52,13 +56,15 @@ function renderCategories() {
 }
 
 function makeProductCard(product) {
+  const selectedLanguage = productLanguages.get(product.id) || 'en';
+  const localizedProduct = displayProduct(product, selectedLanguage);
   const article = document.createElement('section');
   article.className = 'product-card';
   article.id = product.sectionId;
   article.dataset.category = product.category;
   const visual = document.createElement('div');
   visual.className = `product-visual ${product.color || 'mint'}`;
-  const tag = document.createElement('span'); tag.className = 'product-tag'; tag.textContent = product.tag || product.category;
+  const tag = document.createElement('span'); tag.className = 'product-tag'; tag.textContent = localizedProduct.tag || localizedProduct.category;
   const copyLink = document.createElement('button');
   copyLink.type = 'button';
   copyLink.className = 'copy-product-link';
@@ -93,7 +99,7 @@ function makeProductCard(product) {
     const image = document.createElement('img');
     image.className = 'product-image';
     image.src = product.image;
-    image.alt = product.title;
+    image.alt = localizedProduct.title;
     image.loading = 'lazy';
     image.decoding = 'async';
     image.addEventListener('error', () => image.replaceWith(emoji), { once: true });
@@ -102,12 +108,11 @@ function makeProductCard(product) {
     visual.append(tag, copyLink, emoji);
   }
   const details = document.createElement('div'); details.className = 'product-details';
-  const category = document.createElement('p'); category.className = 'product-category'; category.textContent = product.category;
-  const title = document.createElement('h3'); title.textContent = product.title;
+  const category = document.createElement('p'); category.className = 'product-category'; category.textContent = localizedProduct.category;
+  const title = document.createElement('h3'); title.textContent = localizedProduct.title;
   const titleRow = document.createElement('div'); titleRow.className = 'product-title-row';
-  const description = document.createElement('p'); description.className = 'product-description'; description.textContent = product.description;
-  const selectedLanguage = productLanguages.get(product.id) || 'en';
-  const link = document.createElement('a'); link.className = 'product-link'; link.href = googleSearchHref(product, selectedLanguage); link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = 'Search on Google'; link.setAttribute('aria-label', `Search Google for ${product.title} in ${selectedLanguage === 'ml' ? 'Malayalam' : 'English'} (opens in a new tab)`);
+  const description = document.createElement('p'); description.className = 'product-description'; description.textContent = localizedProduct.description;
+  const link = document.createElement('a'); link.className = 'product-link'; link.href = googleSearchHref(product, selectedLanguage); link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = selectedLanguage === 'ml' ? 'Google-ൽ തിരയുക' : 'Search on Google'; link.setAttribute('aria-label', `Search Google for ${localizedProduct.title} in ${selectedLanguage === 'ml' ? 'Malayalam' : 'English'} (opens in a new tab)`);
   const arrow = document.createElement('span'); arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = '↗'; link.append(arrow);
   const actions = document.createElement('div'); actions.className = 'product-actions';
   const languageToggle = document.createElement('button'); languageToggle.className = 'product-language-toggle'; languageToggle.type = 'button'; languageToggle.setAttribute('aria-pressed', String(selectedLanguage === 'ml'));
@@ -117,11 +122,7 @@ function makeProductCard(product) {
     const nextLanguage = (productLanguages.get(product.id) || 'en') === 'en' ? 'ml' : 'en';
     productLanguages.set(product.id, nextLanguage);
     try { localStorage.setItem('pearl-product-search-languages', JSON.stringify(Object.fromEntries(productLanguages))); } catch {}
-    link.href = googleSearchHref(product, nextLanguage);
-    link.setAttribute('aria-label', `Search Google for ${product.title} in ${nextLanguage === 'ml' ? 'Malayalam' : 'English'} (opens in a new tab)`);
-    languageToggle.textContent = nextLanguage === 'ml' ? 'മല' : 'EN';
-    languageToggle.setAttribute('aria-pressed', String(nextLanguage === 'ml'));
-    languageToggle.setAttribute('aria-label', `Google search language for ${product.title}: ${nextLanguage === 'ml' ? 'Malayalam' : 'English'}. Activate to switch languages`);
+    renderProducts();
   });
   titleRow.append(title, languageToggle);
   actions.append(link);
@@ -152,7 +153,7 @@ function renderProducts() {
 }
 
 searchInput.addEventListener('input', renderProducts);
-fetch('products.json').then(response => { if (!response.ok) throw new Error('Could not load product list'); return response.json(); })
+fetch('products.json?v=4').then(response => { if (!response.ok) throw new Error('Could not load product list'); return response.json(); })
   .then(data => {
     products = (data.products || []).filter(item => item && item.title && item.description && item.category && item.sectionId);
     renderCategories(); renderProducts();
