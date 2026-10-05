@@ -21,7 +21,7 @@ body{background:linear-gradient(180deg,#effaff 0%,#f7fcff 42%,#edf8fc 100%);colo
 .product-visual.peach{background-color:#eaf7fa}.product-visual.lavender{background-color:#e8f2fa}.product-visual.mint{background-color:#e1f5f3}.product-visual.yellow{background-color:#edf7ed}.product-visual.blue{background-color:#dff3f9}
 .product-visual:before,.product-visual:after{border-color:#fff}.product-tag{color:#39748b;background:#ffffffc9}
 .product-category{color:#57869a}.product-description{color:#607d8b}.product-actions{border-top-color:#e5f0f3}
-.product-link,.copy-link-button{color:#087da3}.copy-link-button:hover,.copy-link-button:focus-visible{color:#075d7c}
+.product-link,.copy-link-button{color:#087da3}.product-link:hover,.copy-link-button:hover,.copy-link-button:focus-visible{color:#075d7c}
 .shop-note{background:linear-gradient(120deg,#dff3f7,#eaf6fc)}
 .note-doodle{border-color:#abd7e2;color:#1586a2}.shop-note h2 em{color:#168ba5}
 .shop-note-copy p{color:#527487}.shop-note-copy a{color:#087da3;border-bottom-color:#83c3d0}
@@ -50,3 +50,9 @@ body{background:linear-gradient(180deg,#effaff 0%,#f7fcff 42%,#edf8fc 100%);colo
 @keyframes sparkle-glow{from{opacity:.6;scale:.9}to{opacity:1;scale:1.12}}
 @keyframes card-arrive{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
 @media(prefers-reduced-motion:reduce){.hero-art:before,.hero-art:after,.waterline,.fish,.bubble,.sparkle,.product-card{animation:none!important}.product-card{opacity:1;translate:none}}
+.product-actions{flex-wrap:wrap}.product-actions .product-link{order:0;width:100%}
+.product-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.product-title-row h3{min-width:0}
+.product-language-toggle{flex:none;border:1px solid #b7dce7;border-radius:20px;background:#eaf8fb;color:#176780;padding:5px 8px;font:700 9px var(--sans);cursor:pointer;white-space:nowrap}
+.product-language-toggle:hover{border-color:#65b8cb;background:#dcf3f7}.product-language-toggle[aria-pressed=true]{background:#087da3;border-color:#087da3;color:#fff}
+.product-language-toggle:focus-visible{outline:2px solid #1591ab;outline-offset:2px}.product-actions .copy-link-button{order:1;margin-left:auto}
+.google-images-link{order:1;margin-right:auto;color:#087da3;font-size:9px;font-weight:600}.google-images-link:hover{color:#075d7c;text-decoration:underline}

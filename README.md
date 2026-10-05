@@ -14,9 +14,11 @@ Then visit `http://localhost:8000`.
 
 ## Edit the catalog
 
-Update `products.json` in the website's root folder (next to `index.html`). Each product has a unique `id`, display `title`, `category`, `description`, external Wikipedia `link`, direct Wikimedia image URL in `image`, and a unique `sectionId`. The `sectionId` is the product card's in-page anchor and the fragment used by its direct link, for example `https://your-name.github.io/your-repo/#aquarium-fish-food`. Each product card's **Copy QR link** button copies that complete product URL, ready to paste into a QR-code generator after publishing. A valid product QR link opens a focused view with only that product between the shared website header and footer. Ordinary visits without a product fragment still show the full catalog. Optional `emoji` (image fallback), `color`, and `tag` fields control display. Use lowercase hyphenated IDs, keep section IDs unique, and use HTTPS links.
+Update `products.json` in the website's root folder (next to `index.html`). Each product has a unique `id`, display `title`, `category`, `description`, a direct image URL in `image`, Google web and image search URLs in `googleSearchUrl` and `googleImageSearchUrl`, and a unique `sectionId`. The `sectionId` is the product card's in-page anchor and the fragment used by its direct link, for example `https://your-name.github.io/your-repo/#aquarium-fish-food`. Each product card's **Copy QR link** button copies that complete product URL, ready to paste into a QR-code generator after publishing. A valid product QR link opens a focused view with only that product between the shared website header and footer. Ordinary visits without a product fragment still show the full catalog. The **Search on Google** and **Google Images** links use these per-product URLs; the English/Malayalam toggle changes both searches' language for that card. Optional `emoji` (image fallback), `color`, and `tag` fields control display. Use lowercase hyphenated IDs, keep section IDs unique, and use HTTPS links.
 
 The shop logo is `assets/pearl-logo.png` and is used in the header and footer.
+
+Each product card has its own English/Malayalam switch for Google search. The choice is saved per product on that device.
 
 ## Publish to GitHub Pages
 

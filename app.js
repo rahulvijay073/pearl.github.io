@@ -4,6 +4,31 @@ const searchInput = document.querySelector('#search');
 const count = document.querySelector('#item-count');
 let products = [];
 let activeCategory = 'All the good stuff';
+const productLanguages = new Map();
+try {
+  const savedLanguages = JSON.parse(localStorage.getItem('pearl-product-search-languages') || '{}');
+  Object.entries(savedLanguages).forEach(([id, language]) => { if (language === 'ml') productLanguages.set(id, 'ml'); });
+} catch {}
+
+function localizedGoogleHref(sourceUrl, product, language = 'en', imageSearch = false) {
+  const petType = (product.category || '').replace(/^For\s+/i, '');
+  const query = [product.title, petType].filter(Boolean).join(' ');
+  const url = new URL(sourceUrl || 'https://www.google.com/search');
+  if (!url.searchParams.has('q')) url.searchParams.set('q', query);
+  if (imageSearch) url.searchParams.set('tbm', 'isch');
+  url.searchParams.set('hl', language);
+  if (language === 'ml') url.searchParams.set('lr', 'lang_ml');
+  else url.searchParams.delete('lr');
+  return url.href;
+}
+
+function googleSearchHref(product, language = 'en') {
+  return localizedGoogleHref(product.googleSearchUrl, product, language);
+}
+
+function googleImageSearchHref(product, language = 'en') {
+  return localizedGoogleHref(product.googleImageSearchUrl, product, language, true);
+}
 
 function showProductFromHash() {
   const sectionId = decodeURIComponent(location.hash.slice(1));
@@ -16,13 +41,6 @@ function showProductFromHash() {
   renderCategories();
   renderProducts();
   requestAnimationFrame(() => document.getElementById(sectionId)?.scrollIntoView({ block: 'start' }));
-}
-
-function safeExternalLink(value) {
-  try {
-    const url = new URL(value);
-    return url.protocol === 'https:' ? url.href : '#';
-  } catch { return '#'; }
 }
 
 function renderCategories() {
@@ -62,10 +80,27 @@ function makeProductCard(product) {
   const details = document.createElement('div'); details.className = 'product-details';
   const category = document.createElement('p'); category.className = 'product-category'; category.textContent = product.category;
   const title = document.createElement('h3'); title.textContent = product.title;
+  const titleRow = document.createElement('div'); titleRow.className = 'product-title-row';
   const description = document.createElement('p'); description.className = 'product-description'; description.textContent = product.description;
-  const link = document.createElement('a'); link.className = 'product-link'; link.href = safeExternalLink(product.link); link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = 'Learn more with Wikipedia'; link.setAttribute('aria-label', `Learn more about ${product.title} with Wikipedia (opens in a new tab)`);
+  const selectedLanguage = productLanguages.get(product.id) || 'en';
+  const link = document.createElement('a'); link.className = 'product-link'; link.href = googleSearchHref(product, selectedLanguage); link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = 'Search on Google'; link.setAttribute('aria-label', `Search Google for ${product.title} in ${selectedLanguage === 'ml' ? 'Malayalam' : 'English'} (opens in a new tab)`);
   const arrow = document.createElement('span'); arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = '↗'; link.append(arrow);
   const actions = document.createElement('div'); actions.className = 'product-actions';
+  const imageSearchLink = document.createElement('a'); imageSearchLink.className = 'google-images-link'; imageSearchLink.href = googleImageSearchHref(product, selectedLanguage); imageSearchLink.target = '_blank'; imageSearchLink.rel = 'noopener noreferrer'; imageSearchLink.textContent = 'Google Images'; imageSearchLink.setAttribute('aria-label', `Search Google Images for ${product.title} in ${selectedLanguage === 'ml' ? 'Malayalam' : 'English'} (opens in a new tab)`);
+  const languageToggle = document.createElement('button'); languageToggle.className = 'product-language-toggle'; languageToggle.type = 'button'; languageToggle.setAttribute('aria-pressed', String(selectedLanguage === 'ml'));
+  languageToggle.textContent = selectedLanguage === 'ml' ? 'മല' : 'EN';
+  languageToggle.setAttribute('aria-label', `Google search language for ${product.title}: ${selectedLanguage === 'ml' ? 'Malayalam' : 'English'}. Activate to switch languages`);
+  languageToggle.addEventListener('click', () => {
+    const nextLanguage = (productLanguages.get(product.id) || 'en') === 'en' ? 'ml' : 'en';
+    productLanguages.set(product.id, nextLanguage);
+    try { localStorage.setItem('pearl-product-search-languages', JSON.stringify(Object.fromEntries(productLanguages))); } catch {}
+    link.href = googleSearchHref(product, nextLanguage);
+    imageSearchLink.href = googleImageSearchHref(product, nextLanguage);
+    link.setAttribute('aria-label', `Search Google for ${product.title} in ${nextLanguage === 'ml' ? 'Malayalam' : 'English'} (opens in a new tab)`);
+    languageToggle.textContent = nextLanguage === 'ml' ? 'മല' : 'EN';
+    languageToggle.setAttribute('aria-pressed', String(nextLanguage === 'ml'));
+    languageToggle.setAttribute('aria-label', `Google search language for ${product.title}: ${nextLanguage === 'ml' ? 'Malayalam' : 'English'}. Activate to switch languages`);
+  });
   const qrLink = document.createElement('button'); qrLink.className = 'copy-link-button'; qrLink.type = 'button'; qrLink.textContent = 'Copy QR link'; qrLink.setAttribute('aria-label', `Copy direct link to ${product.title}`);
   qrLink.addEventListener('click', async () => {
     const directUrl = new URL(location.href);
@@ -78,8 +113,9 @@ function makeProductCard(product) {
       window.prompt('Copy this direct product link for your QR code:', directUrl.href);
     }
   });
-  actions.append(link, qrLink);
-  details.append(category, title, description, actions); article.append(visual, details);
+  titleRow.append(title, languageToggle);
+  actions.append(link, imageSearchLink, qrLink);
+  details.append(category, titleRow, description, actions); article.append(visual, details);
   return article;
 }
 
