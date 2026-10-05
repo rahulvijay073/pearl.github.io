@@ -70,15 +70,23 @@ function makeProductCard(product) {
     directUrl.hash = product.sectionId;
     try {
       await navigator.clipboard.writeText(directUrl.href);
-      copyLink.classList.add('is-copied');
-      copyLink.setAttribute('aria-label', `Product link copied for ${product.title}`);
-      window.setTimeout(() => {
-        copyLink.classList.remove('is-copied');
-        copyLink.setAttribute('aria-label', `Copy direct link to ${product.title}`);
-      }, 1800);
     } catch {
-      window.prompt('Copy this direct product link for your QR code:', directUrl.href);
+      const fallback = document.createElement('textarea');
+      fallback.value = directUrl.href;
+      fallback.setAttribute('readonly', '');
+      fallback.style.position = 'fixed';
+      fallback.style.opacity = '0';
+      document.body.append(fallback);
+      fallback.select();
+      try { document.execCommand('copy'); } catch {}
+      fallback.remove();
     }
+    copyLink.classList.add('is-copied');
+    copyLink.setAttribute('aria-label', `Product link copied for ${product.title}`);
+    window.setTimeout(() => {
+      copyLink.classList.remove('is-copied');
+      copyLink.setAttribute('aria-label', `Copy direct link to ${product.title}`);
+    }, 1800);
   });
   const emoji = document.createElement('span'); emoji.className = 'product-emoji'; emoji.setAttribute('aria-hidden', 'true'); emoji.textContent = product.emoji || '♡';
   if (product.image) {
