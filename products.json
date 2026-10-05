@@ -1,6 +1,6 @@
 {
   "store": "Pearl Pets & Aquarium",
-  "version": 3,
+  "version": 4,
   "products": [
     {
       "id": "oscar-fish",
@@ -9,7 +9,10 @@
       "description": "The oscar (Astronotus ocellatus) is a South American cichlid also known as the tiger oscar, velvet cichlid, or marble cichlid. It is a popular aquarium fish.",
       "sectionId": "oscar",
       "googleSearchUrl": "https://www.google.com/search?q=Oscar+fish",
-      "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Astronotus_ocellatus.jpg/960px-Astronotus_ocellatus.jpg",
+      "images": [
+        {"name":"Oscar", "link":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Astronotus_ocellatus.jpg/960px-Astronotus_ocellatus.jpg"},
+        {"name":"Lemon Oscar", "link":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrZFwStqRgIHAIiqTFomLIzNH0sU1-YL_96q9vHb04CN2iWAY5d3xn4eY&s"}
+      ],
       "ml": {"title": "ഓസ്കാർ", "category": "മത്സ്യം", "description": "ഓസ്കാർ (Astronotus ocellatus) തെക്കേ അമേരിക്കൻ സിക്ക്ലിഡ് ഇനത്തിലെ ഒരു മത്സ്യമാണ്. ടൈഗർ ഓസ്കാർ, വെൽവെറ്റ് സിക്ക്ലിഡ്, മാർബിൾ സിക്ക്ലിഡ് എന്നീ പേരുകളിലും ഇത് അറിയപ്പെടുന്നു. അക്വേറിയങ്ങളിൽ വളർത്താൻ ജനപ്രിയമായ മത്സ്യമാണിത്."}
     },
     {

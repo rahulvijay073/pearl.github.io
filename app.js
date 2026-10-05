@@ -29,6 +29,22 @@ function displayProduct(product, language) {
   return language === 'ml' && product.ml ? { ...product, ...product.ml } : product;
 }
 
+function productImages(product) {
+  const entries = [
+    ...(Array.isArray(product.images) ? product.images : product.images ? [product.images] : []),
+    ...(Array.isArray(product.image) ? product.image : product.image ? [product.image] : [])
+  ];
+  const seenUrls = new Set();
+  return entries.reduce((images, entry, index) => {
+    const url = typeof entry === 'string' ? entry.trim() : typeof entry?.link === 'string' ? entry.link.trim() : typeof entry?.url === 'string' ? entry.url.trim() : '';
+    if (!url || seenUrls.has(url)) return images;
+    seenUrls.add(url);
+    const hasName = typeof entry === 'object' && typeof entry.name === 'string' && entry.name.trim();
+    images.push({ name: hasName || `Image ${index + 1}`, hasName: Boolean(hasName), url });
+    return images;
+  }, []);
+}
+
 function showProductFromHash() {
   const sectionId = decodeURIComponent(location.hash.slice(1));
   if (!sectionId || !products.some(product => product.sectionId === sectionId)) {
@@ -95,15 +111,55 @@ function makeProductCard(product) {
     }, 1800);
   });
   const emoji = document.createElement('span'); emoji.className = 'product-emoji'; emoji.setAttribute('aria-hidden', 'true'); emoji.textContent = product.emoji || '♡';
-  if (product.image) {
-    const image = document.createElement('img');
-    image.className = 'product-image';
-    image.src = product.image;
-    image.alt = localizedProduct.title;
-    image.loading = 'lazy';
-    image.decoding = 'async';
-    image.addEventListener('error', () => image.replaceWith(emoji), { once: true });
-    visual.append(tag, copyLink, image);
+  const images = productImages(product);
+  if (images.length) {
+    const gallery = document.createElement('div');
+    gallery.className = 'product-image-gallery';
+    let activeImage = 0;
+    const imageElements = [];
+    let controls;
+    const setActiveImage = index => {
+      if (!imageElements[index]?.isConnected) return;
+      activeImage = index;
+      imageElements.forEach((image, imageIndex) => { image.hidden = imageIndex !== activeImage; });
+      if (controls) [...controls.children].forEach((button, buttonIndex) => button.setAttribute('aria-current', String(buttonIndex === activeImage)));
+      if (images[activeImage].hasName) tag.textContent = images[activeImage].name;
+    };
+    images.forEach(({ name, url }, index) => {
+      const image = document.createElement('img');
+      image.className = 'product-image';
+      image.src = url;
+      image.alt = `${localizedProduct.title} — ${name}`;
+      image.loading = index === 0 ? 'eager' : 'lazy';
+      image.decoding = 'async';
+      image.hidden = index !== 0;
+      image.addEventListener('error', () => {
+        image.remove();
+        const nextImage = imageElements.find(candidate => candidate.isConnected);
+        if (nextImage) setActiveImage(imageElements.indexOf(nextImage));
+        else gallery.append(emoji);
+      }, { once: true });
+      gallery.append(image);
+      imageElements.push(image);
+    });
+    if (images[0].hasName) tag.textContent = images[0].name;
+    visual.append(tag, copyLink, gallery);
+    if (images.length > 1) {
+      controls = document.createElement('div');
+      controls.className = 'product-image-controls';
+      controls.setAttribute('aria-label', `Images for ${localizedProduct.title}`);
+      images.forEach(({ name }, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'product-image-dot';
+        button.setAttribute('aria-label', `Show ${name}, image ${index + 1} of ${images.length}`);
+        button.title = name;
+        button.setAttribute('aria-current', String(index === 0));
+        button.addEventListener('click', () => setActiveImage(index));
+        controls.append(button);
+      });
+      visual.append(controls);
+    }
   } else {
     visual.append(tag, copyLink, emoji);
   }
@@ -112,6 +168,20 @@ function makeProductCard(product) {
   const title = document.createElement('h3'); title.textContent = localizedProduct.title;
   const titleRow = document.createElement('div'); titleRow.className = 'product-title-row';
   const description = document.createElement('p'); description.className = 'product-description'; description.textContent = localizedProduct.description;
+  const descriptionToggle = document.createElement('button');
+  descriptionToggle.type = 'button';
+  descriptionToggle.className = 'product-description-toggle';
+  descriptionToggle.textContent = 'Show more';
+  descriptionToggle.setAttribute('aria-expanded', 'false');
+  descriptionToggle.hidden = true;
+  descriptionToggle.addEventListener('click', () => {
+    const expanded = description.classList.toggle('is-expanded');
+    descriptionToggle.textContent = expanded ? 'Show less' : 'Show more';
+    descriptionToggle.setAttribute('aria-expanded', String(expanded));
+  });
+  requestAnimationFrame(() => {
+    descriptionToggle.hidden = description.scrollHeight <= description.clientHeight + 1;
+  });
   const link = document.createElement('a'); link.className = 'product-link'; link.href = googleSearchHref(product, selectedLanguage); link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = selectedLanguage === 'ml' ? 'Google-ൽ തിരയുക' : 'Search on Google'; link.setAttribute('aria-label', `Search Google for ${localizedProduct.title} in ${selectedLanguage === 'ml' ? 'Malayalam' : 'English'} (opens in a new tab)`);
   const arrow = document.createElement('span'); arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = '↗'; link.append(arrow);
   const actions = document.createElement('div'); actions.className = 'product-actions';
@@ -126,7 +196,7 @@ function makeProductCard(product) {
   });
   titleRow.append(title, languageToggle);
   actions.append(link);
-  details.append(category, titleRow, description, actions); article.append(visual, details);
+  details.append(category, titleRow, description, descriptionToggle, actions); article.append(visual, details);
   return article;
 }
 
@@ -153,7 +223,7 @@ function renderProducts() {
 }
 
 searchInput.addEventListener('input', renderProducts);
-fetch('products.json?v=4').then(response => { if (!response.ok) throw new Error('Could not load product list'); return response.json(); })
+fetch('products.json?v=5').then(response => { if (!response.ok) throw new Error('Could not load product list'); return response.json(); })
   .then(data => {
     products = (data.products || []).filter(item => item && item.title && item.description && item.category && item.sectionId);
     renderCategories(); renderProducts();
