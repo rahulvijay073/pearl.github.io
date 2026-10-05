@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pearl-pets-v22';
+const CACHE_NAME = 'pearl-pets-v23';
 const APP_FILES = ['./', './index.html', './styles.css', './ocean-theme.css?v=11', './app.js?v=2', './products.json?v=4', './manifest.webmanifest', './assets/pearl-icon.svg', './assets/pearl-logo.png'];
 
 self.addEventListener('install', event => {
