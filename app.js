@@ -47,7 +47,18 @@ function makeProductCard(product) {
   visual.className = `product-visual ${product.color || 'mint'}`;
   const tag = document.createElement('span'); tag.className = 'product-tag'; tag.textContent = product.tag || product.category;
   const emoji = document.createElement('span'); emoji.className = 'product-emoji'; emoji.setAttribute('aria-hidden', 'true'); emoji.textContent = product.emoji || '♡';
-  visual.append(tag, emoji);
+  if (product.image) {
+    const image = document.createElement('img');
+    image.className = 'product-image';
+    image.src = product.image;
+    image.alt = product.title;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.addEventListener('error', () => image.replaceWith(emoji), { once: true });
+    visual.append(tag, image);
+  } else {
+    visual.append(tag, emoji);
+  }
   const details = document.createElement('div'); details.className = 'product-details';
   const category = document.createElement('p'); category.className = 'product-category'; category.textContent = product.category;
   const title = document.createElement('h3'); title.textContent = product.title;
