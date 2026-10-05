@@ -1,5 +1,5 @@
-const CACHE_NAME = 'pearl-pets-v16';
-const APP_FILES = ['./', './index.html', './styles.css', './ocean-theme.css?v=10', './app.js', './products.json', './manifest.webmanifest', './assets/pearl-icon.svg', './assets/pearl-logo.png', './assets/kavumkudiyils-pearl-logo.jpeg'];
+const CACHE_NAME = 'pearl-pets-v17';
+const APP_FILES = ['./', './index.html', './styles.css', './ocean-theme.css?v=10', './app.js', './products.json', './manifest.webmanifest', './assets/pearl-icon.svg', './assets/pearl-logo.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)).then(() => self.skipWaiting()));
