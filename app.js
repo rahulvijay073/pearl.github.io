@@ -59,6 +59,27 @@ function makeProductCard(product) {
   const visual = document.createElement('div');
   visual.className = `product-visual ${product.color || 'mint'}`;
   const tag = document.createElement('span'); tag.className = 'product-tag'; tag.textContent = product.tag || product.category;
+  const copyLink = document.createElement('button');
+  copyLink.type = 'button';
+  copyLink.className = 'copy-product-link';
+  copyLink.setAttribute('aria-label', `Copy direct link to ${product.title}`);
+  copyLink.title = 'Copy product link';
+  copyLink.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>';
+  copyLink.addEventListener('click', async () => {
+    const directUrl = new URL(location.href);
+    directUrl.hash = product.sectionId;
+    try {
+      await navigator.clipboard.writeText(directUrl.href);
+      copyLink.classList.add('is-copied');
+      copyLink.setAttribute('aria-label', `Product link copied for ${product.title}`);
+      window.setTimeout(() => {
+        copyLink.classList.remove('is-copied');
+        copyLink.setAttribute('aria-label', `Copy direct link to ${product.title}`);
+      }, 1800);
+    } catch {
+      window.prompt('Copy this direct product link for your QR code:', directUrl.href);
+    }
+  });
   const emoji = document.createElement('span'); emoji.className = 'product-emoji'; emoji.setAttribute('aria-hidden', 'true'); emoji.textContent = product.emoji || '♡';
   if (product.image) {
     const image = document.createElement('img');
@@ -68,9 +89,9 @@ function makeProductCard(product) {
     image.loading = 'lazy';
     image.decoding = 'async';
     image.addEventListener('error', () => image.replaceWith(emoji), { once: true });
-    visual.append(tag, image);
+    visual.append(tag, copyLink, image);
   } else {
-    visual.append(tag, emoji);
+    visual.append(tag, copyLink, emoji);
   }
   const details = document.createElement('div'); details.className = 'product-details';
   const category = document.createElement('p'); category.className = 'product-category'; category.textContent = product.category;
