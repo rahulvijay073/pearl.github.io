@@ -159,6 +159,22 @@ function makeProductCard(product) {
         controls.append(button);
       });
       visual.append(controls);
+
+      let swipeStart;
+      gallery.addEventListener('pointerdown', event => {
+        swipeStart = { id: event.pointerId, x: event.clientX, y: event.clientY };
+        gallery.setPointerCapture?.(event.pointerId);
+      });
+      gallery.addEventListener('pointerup', event => {
+        if (!swipeStart || event.pointerId !== swipeStart.id) return;
+        const deltaX = event.clientX - swipeStart.x;
+        const deltaY = event.clientY - swipeStart.y;
+        swipeStart = undefined;
+        if (Math.abs(deltaX) < 35 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+        const direction = deltaX < 0 ? 1 : -1;
+        setActiveImage((activeImage + direction + images.length) % images.length);
+      });
+      gallery.addEventListener('pointercancel', () => { swipeStart = undefined; });
     }
   } else {
     visual.append(tag, copyLink, emoji);
@@ -223,7 +239,7 @@ function renderProducts() {
 }
 
 searchInput.addEventListener('input', renderProducts);
-fetch('products.json?v=5').then(response => { if (!response.ok) throw new Error('Could not load product list'); return response.json(); })
+fetch('products.json?v=6').then(response => { if (!response.ok) throw new Error('Could not load product list'); return response.json(); })
   .then(data => {
     products = (data.products || []).filter(item => item && item.title && item.description && item.category && item.sectionId);
     renderCategories(); renderProducts();
