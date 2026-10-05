@@ -23,16 +23,16 @@
       "sectionId": "Goldfish",
       "googleSearchUrl": "https://www.google.com/search?q=Goldfish",
       "images": [
-        {"name":"Gold Fish", "link":"https://en.wikipedia.org/wiki/Goldfish#/media/File:Gold_fish1.jpg"},
-        {"name":"Black moor", "link":"https://en.wikipedia.org/wiki/Goldfish#/media/File:Black_Moor_Goldfish.jpg"},
-		{"name":"pearl scale", "link":"https://en.wikipedia.org/wiki/Goldfish#/media/File:Goldfish_Pearl_Scale.jpg"}
+        {"name":"Gold Fish", "link":"https://upload.wikimedia.org/wikipedia/commons/6/65/Gold_fish1.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original"},
+        {"name":"Black moor", "link":"https://upload.wikimedia.org/wikipedia/commons/0/0a/Black_Moor_Goldfish.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original"},
+		{"name":"pearl scale", "link":"https://upload.wikimedia.org/wikipedia/commons/d/dd/Goldfish_Pearl_Scale.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original"}
       ],
       "ml": {"title": "സ്വർണ്ണമത്സ്യം", "category": "മത്സ്യം", "description": "മനുഷ്യൻ വളർത്താൻ തുടങ്ങിയ ഏറ്റവും ആദ്യത്തെ വളർത്തു മത്സ്യം ആണ് സ്വർണ മത്സ്യങ്ങൾ. ശുദ്ധജലമത്സ്യം ആയ ഇവ കാർപ്പ് കുടുംബത്തിൽ പെട്ടവയാണ് . ഏഷ്യൻ വംശജർ ആയ ഇവയെ ഏകദേശം ആയിരം വർഷം മുൻപ് ചൈനയിൽ ആണ് ആദ്യം വളർത്താൻ തുടങ്ങിയത്. അതിൽ പിന്നെ കുറയേ ഏറെ സങ്കര ഇനം സ്വർണമത്സ്യം ഉരുത്തിരിഞ്ഞിടുണ്ട്."}
     },
     {
       "id": "wholesome-cat-food",
       "title": "Wholesome Cat Food",
-      "category": "For cats",
+      "category": "cats",
       "description": "A tasty, nourishing bowl for curious cats, whether they rule the sofa or patrol the windowsill.",
       "sectionId": "wholesome-cat-food",
       "googleSearchUrl": "https://www.google.com/search?q=Wholesome+cat+food",
@@ -42,7 +42,7 @@
     {
       "id": "scratch-and-stretch",
       "title": "Scratch & Stretch Post",
-      "category": "For cats",
+      "category": "cats",
       "description": "A sturdy spot for stretching, scratching and surveying the kingdom from a very important vantage point.",
       "sectionId": "scratch-and-stretch",
       "googleSearchUrl": "https://www.google.com/search?q=Scratch+and+stretch+cat+post",
@@ -52,7 +52,7 @@
     {
       "id": "feather-chaser",
       "title": "Feather Chaser Wand",
-      "category": "For cats",
+      "category": "cats",
       "description": "A little flutter, a playful pounce, and a whole lot of happy zoomies. Made for interactive play together.",
       "sectionId": "feather-chaser",
       "googleSearchUrl": "https://www.google.com/search?q=Feather+chaser+cat+wand",
@@ -62,7 +62,7 @@
     {
       "id": "aquarium-fish-food",
       "title": "Tropical Fish Flakes",
-      "category": "For fish",
+      "category": "Fish",
       "description": "A convenient everyday meal for many tropical aquarium fish. Feed small portions your fish can finish.",
       "sectionId": "aquarium-fish-food",
       "googleSearchUrl": "https://www.google.com/search?q=Tropical+fish+flakes",
@@ -72,7 +72,7 @@
     {
       "id": "water-care-kit",
       "title": "Aquarium Water Care",
-      "category": "For fish",
+      "category": "Fish",
       "description": "Simple water care helps make a healthier home for aquarium life. Follow product directions and test regularly.",
       "sectionId": "water-care-kit",
       "googleSearchUrl": "https://www.google.com/search?q=Aquarium+water+care+fish",
@@ -82,7 +82,7 @@
     {
       "id": "aquarium-plants",
       "title": "Little Green Aquascape",
-      "category": "For fish",
+      "category": "Fish",
       "description": "Add a natural-looking touch of greenery and interesting places to explore in your aquarium.",
       "sectionId": "aquarium-plants",
       "googleSearchUrl": "https://www.google.com/search?q=Aquarium+plants+aquascape",
@@ -92,7 +92,7 @@
     {
       "id": "bird-seed-mix",
       "title": "Cheery Bird Seed Mix",
-      "category": "For birds",
+      "category": "birds",
       "description": "A thoughtfully chosen seed mix for everyday feeding. Match food to your bird's species and dietary needs.",
       "sectionId": "bird-seed-mix",
       "googleSearchUrl": "https://www.google.com/search?q=Bird+seed+mix",
@@ -102,7 +102,7 @@
     {
       "id": "bird-perch",
       "title": "Natural Bird Perch",
-      "category": "For birds",
+      "category": "birds",
       "description": "A comfortable place to perch, rest and keep an eye on everything. Choose a size suited to your bird.",
       "sectionId": "bird-perch",
       "googleSearchUrl": "https://www.google.com/search?q=Natural+bird+perch",
@@ -112,7 +112,7 @@
     {
       "id": "small-pet-hay",
       "title": "Meadow Fresh Hay",
-      "category": "For small pets",
+      "category": "small pets",
       "description": "A fresh, fibrous staple for rabbits and many small herbivores. Check your pet's specific dietary needs.",
       "sectionId": "small-pet-hay",
       "googleSearchUrl": "https://www.google.com/search?q=Meadow+fresh+hay+rabbit+guinea+pig",
